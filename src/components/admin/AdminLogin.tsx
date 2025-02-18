@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
+import { supabase } from '@/lib/supabase/client';
 
 interface AdminLoginProps {
   onLogin: () => void;
@@ -14,7 +15,7 @@ interface AdminLoginProps {
 export default function AdminLogin({ onLogin }: AdminLoginProps) {
   const [loading, setLoading] = useState(false);
   const [credentials, setCredentials] = useState({
-    email: 'info@meliyahafrohair.ch',
+    email: '',
     password: '',
   });
 
@@ -23,12 +24,18 @@ export default function AdminLogin({ onLogin }: AdminLoginProps) {
     setLoading(true);
 
     try {
-      // For demo purposes, using simple password check
-      if (credentials.password === 'admin123') {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: credentials.email,
+        password: credentials.password,
+      });
+
+      if (error) {
+        throw error;
+      }
+
+      if (data.session) {
         toast.success('Erfolgreich angemeldet');
         onLogin();
-      } else {
-        throw new Error('Invalid credentials');
       }
     } catch (error) {
       console.error('Login error:', error);
@@ -52,7 +59,7 @@ export default function AdminLogin({ onLogin }: AdminLoginProps) {
                 id="email"
                 type="email"
                 value={credentials.email}
-                disabled
+                onChange={(e) => setCredentials({ ...credentials, email: e.target.value })}
                 required
               />
             </div>

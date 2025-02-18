@@ -4,6 +4,7 @@ import AdminLayout from './components/AdminLayout';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminLogin from './pages/AdminLogin';
 import { Toaster } from 'sonner';
+import { supabase } from '@/lib/supabase/client';
 
 export default function AdminApp() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -11,9 +12,14 @@ export default function AdminApp() {
 
   useEffect(() => {
     // Check admin token
-    const token = localStorage.getItem('adminToken');
-    setIsAuthenticated(!!token);
-    setIsLoading(false);
+    const checkAuth = async () => {
+      const { data, error } = await supabase.auth.getSession();
+      if (data.session) {
+        setIsAuthenticated(true);
+      }
+      setIsLoading(false);
+    };
+    checkAuth();
   }, []);
 
   if (isLoading) {
