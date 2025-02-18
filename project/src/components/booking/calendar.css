@@ -1,0 +1,113 @@
+.rdp {
+  --rdp-cell-size: 50px; /* Increased from 45px */
+  --rdp-accent-color: #ff8c00;
+  --rdp-background-color: white;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.rdp-months {
+  justify-content: center;
+}
+
+.rdp-month {
+  background: white;
+  padding: 24px; /* Increased padding */
+  border-radius: 8px;
+}
+
+.rdp-caption {
+  padding: 0 0 32px 0; /* Increased bottom padding */
+}
+
+.rdp-caption_label {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1a1a1a;
+  text-transform: uppercase;
+  margin: 0 32px; /* Increased margin */
+}
+
+.rdp-nav {
+  position: absolute;
+  right: 0;
+  top: 0;
+  display: flex;
+  gap: 16px; /* Increased gap */
+}
+
+.rdp-nav_button {
+  width: 36px; /* Increased size */
+  height: 36px;
+  padding: 4px;
+  border-radius: 4px;
+  color: #ff8c00;
+  background: none;
+}
+
+.rdp-nav_button:hover {
+  background: #fff3e6;
+}
+
+.rdp-head {
+  font-size: 14px;
+  font-weight: 500;
+  text-transform: uppercase;
+  color: #666;
+}
+
+.rdp-head_cell {
+  padding: 16px; /* Increased padding */
+  text-align: center;
+  font-weight: 500;
+}
+
+.rdp-tbody {
+  border-spacing: 12px; /* Increased spacing between cells */
+}
+
+.rdp-cell {
+  padding: 8px 0; /* Increased padding */
+}
+
+.rdp-day {
+  width: var(--rdp-cell-size);
+  height: var(--rdp-cell-size);
+  border-radius: 50%;
+  font-size: 16px;
+  font-weight: 500;
+  color: #1a1a1a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.rdp-day:hover:not(.rdp-day_disabled):not(.rdp-day_selected) {
+  background-color: #fff3e6;
+}
+
+.rdp-day_selected {
+  background-color: #ff8c00 !important;
+  color: white !important;
+  font-weight: bold !important;
+}
+
+.rdp-day_disabled {
+  color: #ccc;
+  cursor: not-allowed;
+}
+
+.rdp-day_today {
+  font-weight: bold;
+}
+
+.rdp-day_available {
+  background-color: #fff3e6 !important;
+  color: #ff8c00 !important;
+}
+
+.rdp-day_available:hover {
+  background-color: #ffddb3 !important;
+}
