@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { sendBookingConfirmation } from '@/lib/email/resend';
 import { z } from 'zod';
+import { supabase } from '@/lib/supabase/client';
 
 const bookingSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
@@ -22,9 +23,20 @@ export async function POST(request: Request) {
     const validatedData = bookingSchema.parse(body);
     console.log('Validated booking data:', validatedData);
 
-    // Step 2: Send confirmation email
+    // Step 2: Insert booking data into the database
+    const { data: bookingData, error: bookingError } = await supabase
+      .from('bookings')
+      .insert([validatedData])
+      .select()
+      .single();
+
+    if (bookingError) {
+      throw bookingError;
+    }
+
+    // Step 3: Send confirmation email
     const emailResult = await sendBookingConfirmation({
-      bookingId: 'TEST-' + Date.now(),
+      bookingId: bookingData.id,
       customerName: validatedData.name,
       customerEmail: validatedData.email,
       packageName: 'Test Package',
@@ -36,7 +48,7 @@ export async function POST(request: Request) {
     return NextResponse.json({
       success: true,
       data: {
-        id: 'TEST-' + Date.now(),
+        id: bookingData.id,
         date: validatedData.date,
         time: validatedData.time,
         packageId: validatedData.package_id,

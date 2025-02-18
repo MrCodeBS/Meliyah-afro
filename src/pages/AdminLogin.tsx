@@ -5,23 +5,33 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { toast } from 'sonner';
+import { supabase } from '@/lib/supabase/client';
 
 export default function AdminLogin() {
   const navigate = useNavigate();
   const [credentials, setCredentials] = useState({
-    username: '',
+    email: '',
     password: '',
   });
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // In a real application, this would be an API call with proper security
-    if (credentials.username === 'admin' && credentials.password === '123') {
-      localStorage.setItem('adminAuthenticated', 'true');
-      navigate('/admin');
-      toast.success('Erfolgreich angemeldet');
-    } else {
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: credentials.email,
+        password: credentials.password,
+      });
+
+      if (error) {
+        throw error;
+      }
+
+      if (data.session) {
+        navigate('/admin');
+        toast.success('Erfolgreich angemeldet');
+      }
+    } catch (error) {
       toast.error('Ungültige Anmeldedaten');
     }
   };
@@ -35,11 +45,12 @@ export default function AdminLogin() {
         <CardContent>
           <form onSubmit={handleLogin} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="username">Benutzername</Label>
+              <Label htmlFor="email">Email</Label>
               <Input
-                id="username"
-                value={credentials.username}
-                onChange={(e) => setCredentials({ ...credentials, username: e.target.value })}
+                id="email"
+                type="email"
+                value={credentials.email}
+                onChange={(e) => setCredentials({ ...credentials, email: e.target.value })}
                 required
               />
             </div>

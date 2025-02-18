@@ -44,7 +44,7 @@ export default function BookingPage() {
 
   const handleTimeSelect = (time: string) => {
     dispatch({ type: 'SELECT_TIME', payload: time });
-    setStep(5);
+    setStep(4);
   };
 
   const isDayFullyBooked = (date: Date) => {
@@ -111,7 +111,7 @@ export default function BookingPage() {
     <div className="max-w-6xl mx-auto space-y-8">
       {/* Progress Steps */}
       <div className="flex justify-between mb-8">
-        {['Paket wählen', 'Mitarbeiter wählen', 'Termin wählen', 'Zeit wählen', 'Bestätigung'].map((title, index) => (
+        {['Paket wählen', 'Mitarbeiter wählen', 'Termin wählen', 'Bestätigung'].map((title, index) => (
           <div
             key={title}
             className={`flex items-center ${index < step ? 'text-primary' : 'text-muted-foreground'}`}
@@ -122,7 +122,7 @@ export default function BookingPage() {
               {index + 1}
             </div>
             <span className="ml-2">{title}</span>
-            {index < 4 && <div className="w-12 h-0.5 mx-2 bg-muted" />}
+            {index < 3 && <div className="w-12 h-0.5 mx-2 bg-muted" />}
           </div>
         ))}
       </div>
@@ -209,7 +209,7 @@ export default function BookingPage() {
       )}
 
       {/* Date and Time Selection */}
-      {(step === 3 || step === 4) && (
+      {step === 3 && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Calendar */}
           <Card>
@@ -266,7 +266,7 @@ export default function BookingPage() {
       )}
 
       {/* Confirmation */}
-      {step === 5 && <BookingConfirmation />}
+      {step === 4 && <BookingConfirmation />}
 
       {/* Navigation */}
       <div className="flex justify-between">
@@ -275,7 +275,7 @@ export default function BookingPage() {
             Zurück
           </Button>
         )}
-        {step < 5 && state.selectedTime && (
+        {step < 4 && state.selectedTime && (
           <Button onClick={() => setStep((prev) => prev + 1)}>
             Weiter
           </Button>
